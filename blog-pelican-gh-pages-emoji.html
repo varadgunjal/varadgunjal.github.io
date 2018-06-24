@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <title>Blogging with Pelican & Github Pages - blag</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- for Google -->
+    <meta name="author" content="varad" />
+ <meta name="description" content="<p>A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.</p>" />  <meta name="keywords" content="" /> 
+    <!-- for Facebook -->          
+    <meta property="og:title" content="Blogging with Pelican & Github Pages" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://blog.varadgunjal.com/blog-pelican-gh-pages-emoji.html" />
+ <meta property="og:description" content="<p>A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.</p>" /> 
+    <!-- for Twitter -->
+    <meta name="twitter:title" content="Blogging with Pelican & Github Pages" />
+    <meta name="twitter:description" content="<p>A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.</p>" />
+    <meta name="twitter:card" content="<p>A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.</p>" />
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet" />-->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://blog.varadgunjal.com/theme/style.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body id="index" class="archive">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-left" style="padding-top: 5px; padding-bottom: 5px">
+            <img style="border-radius: 50%; height: 40px" src="me.png" />
+          </a>
+          <a class="navbar-brand" style="margin-left: 5px" href="https://blog.varadgunjal.com">blag</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav">
+            <li ><a href="https://blog.varadgunjal.com/archives.html">archives</a></li>
+            <li ><a href="https://blog.varadgunjal.com/tags.html">about</a></li>           
+            <!--
+f
+            <li><a href="https://blog.varadgunjal.com/tags.html">tags</a></li>
+            -->
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+    </nav>
+    <div class="container">
+    <section id="content" class="article content">
+      <header>
+        <h2 class="entry-title">
+          Blogging with Pelican & Github Pages
+        </h2>
+        
+        <div class="text-muted">Fri 03 December 2010</div>
+      </header>
+<!-- .entry-content -->
+      <div class="entry-content">
+        <p><br/>
+This post documents my (mis)adventures setting up a blog using <a href="">Pelican</a> - a static site generator, very much like the popular Jekyll &amp; Go frameworks, except it is powered by Python, not Ruby or Go. I decided to make the switch despite years of stability with Jekyll, because Python.</p>
+<h3>Installing Pelican</h3>
+<hr>
+<p>I wanted to have the ability to add some customizations of my own, so I decided to install Pelican from source. I created 2 separate folders: <code>dev</code> to contain local experimentation and <code>prod</code> to publish finalized edits to my Github Pages repository. The local setup is only concerned with <code>dev</code>. Run the following command inside an (preferably empty) directory on your machine where you want to store your website contents.</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/getpelican/pelican.git dev
+</pre></div>
+
+
+<p>As mentioned in the <a href="">documentation</a>, create a virtual environment first using <code>virtualenv</code> before proceeding with any further installation. I called mine <code>website</code>. Start it up like so -</p>
+<div class="highlight"><pre><span></span>virtualenv ~/envs/website
+source ~/envs/website/bin/activate
+</pre></div>
+
+
+<blockquote>
+<p><strong>Tip</strong>: It can get annoying to remember the path to the folder where you store your virtual environments and type <code>source bin/activate</code> to switch into one. To get around the following, add the following to <code>~/.bash_aliases</code> -</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">workon() {</span>  
+    <span class="nx">source</span> <span class="o">~</span><span class="sr">/envs/</span><span class="nx">$1</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">activate</span>  
+<span class="p">}</span>
+</pre></div>
+
+
+<p>and you can now switch into a virtual environment by simply typing <code>workon &lt;env name&gt;</code> at the command line from anywhere in your filesystem.</p>
+</blockquote>
+<p>Now navigate to the <code>dev</code> folder which contains the pelican source code pulled from Github in the first step and run the setup scripts.</p>
+<div class="highlight"><pre><span></span>cd dev
+python setup.py install
+pelican-quickstart
+</pre></div>
+
+
+<p><code>pelican-quickstart</code> sets up a base installation by posing you a bunch of questions. This should create a some new folders under <code>dev</code> including <code>output</code>, which contains the final static HTML of the website. To view the output locally, my preferred way was to have 2 separate tmux sessions. One running the content regeneration on autoreload -</p>
+<div class="highlight"><pre><span></span>pelican content/ -r -s pelican/settings.py
+</pre></div>
+
+
+<p>and another, building the HTML and serving it up on <code>localhost</code> -</p>
+<div class="highlight"><pre><span></span>make html &amp;&amp; cd output &amp;&amp; python -m SimpleHTTPServer
+</pre></div>
+
+
+<p>For some reason, my experience with the <code>make devserver</code> command was not ideal. You can now view how your blog looks on <code>localhost:8000</code> and preview changes before publishing it live on your website.</p>
+<blockquote>
+<p><strong>Tip</strong>: The <code>pelican-themes</code> tool makes it super-easy to install and switch between themes. This blog uses the <a href="">skyfall</a> theme (with a few additions of my own), because it is the closest I found to some clean Hugo themes I'm fond of. To install a theme like skyfall, simply run the following under the <code>dev</code> folder -</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/avinassh/skyfall.git pelican/themes/skyfall
+pelican-themes -i pelican/themes/skyfall
+</pre></div>
+
+
+<p>and add a rule to <code>pelicanconf.py</code> -</p>
+<div class="highlight"><pre><span></span>THEMES = u&#39;pelican/themes/skyfall&#39;
+</pre></div>
+
+
+<p>Upon rebuilding, the site will reflect the change and you cna continue working further.
+<br/><br/></p>
+</blockquote>
+<h3>Adding Emoji Support</h3>
+<hr>
+<p>Sadly, Pelican doesn't support have in-built support for emoji like Jekyll does. Not like I really care about emoji, but I <em><strong>really</strong></em> wanted to add in a <code>grinning_face</code> emoji at the end of my first blog post. Don't judge. I didn't find anything under the <a href="">Pelican Plugins</a>, but, serendipitously, one of my programmer heroes, <a href="">bytefish</a>, had published a <a href="">solution</a> to this just 2 weeks ago. His post detailing it is pretty self-explanatory, however, I'll fill in some blanks, if you make the same missteps I did.</p>
+<p>To get started, fetch the source code for the extension and install it on your machine. If you care a lot about separation of concerns, make sure you switch over to the <code>website</code> virtual environment, before executing the following commands in a folder where you want to store software -</p>
+<div class="highlight"><pre><span></span>git clone https://github.com/bytefish/MarkdownEmojiExtension
+cd MarkdownEmojiExtension &amp;&amp; python setup.py install
+</pre></div>
+
+
+<p>This will install the emoji extension within the <code>website</code> virtual environment. However, before we are able to use it further, note some quirks of it -</p>
+<ul>
+<li>
+<p>To parse emoji in your posts correctly, you need to wrap them in 2 colon groups when you're writing, and not 1 like you may be used to viz. 😀 instead of :grinning_face:</p>
+<ul>
+<li>This shouldn't be too much of a problem unless you <a href="">communicate exclusively in emoji</a>. And if you do, just change the regex inside <code>emojiextension.py</code>.</li>
+</ul>
+</li>
+<li>
+<p>The extension assumes that you have the mapping between emoji identifiers and their corresponding unicode stored as a list in a file called <code>emojis.json</code> under a <code>resources</code> folder at the root of your perlican installation - which, in our case, corresponds to the <code>dev</code> folder. So your <code>dev</code> folder would look like -</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span>dev  
+|  
++-- pelican/  
+|  
++-- requirements/  
+|  
+...  
+...  
+|  
++-- resources/  
+   |  
+   +-- emojis.json
+</pre></div>
+
+
+<p><br/></p>
+<h4>Emoji Dictionary</h4>
+<hr>
+<p>As mentioned in the original blog post for the emoji extension, a good reference for emojis can be found here - https://github.com/shanraisshan/EmojiCodeSheet. The data we need to get is under the <code>json/string</code> folder. I wasn't about to download an entire repo of data I'd most likely never use. So instead, I used the handy <a href="https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn">GitZip extension</a> to download that specific folder as a zip file. Extracting the contents of the zip folder will keep all the files under <code>json/string</code> in the directory where you downloaded it. An interesting fact about the structure of these files - all the key-value pairs are under 2 layers of nesting. For eg.</p>
+<p><strong>Nature.json</strong></p>
+<div class="highlight"><pre><span></span><span class="p">{</span>  
+    <span class="nt">&quot;natures&quot;</span><span class="p">:</span>  
+        <span class="s2">&quot;nature&quot;</span><span class="p">:</span> <span class="p">[</span>  
+            <span class="p">{</span>  
+                <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="err">...</span> <span class="p">,</span>  
+                <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="err">...</span>  
+            <span class="p">}</span>  
+            <span class="err">.</span>  
+            <span class="err">.</span>  
+            <span class="err">.</span>  
+        <span class="p">]</span>  
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>People.json</strong></p>
+<div class="highlight"><pre><span></span><span class="p">{</span>    
+    <span class="nt">&quot;peoples&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;people&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="err">...</span> <span class="p">,</span>
+                <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="err">...</span>
+            <span class="p">}</span>
+            <span class="err">.</span>
+            <span class="err">.</span>
+            <span class="err">.</span>
+        <span class="p">]</span>
+
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Thus, accessing the key-value pairs can follow a common structure for all files. This common structure makes it straightforward for us to compose them all into one file. 
+<br/><br/></p>
+<h4>Rolling a single emojis.json</h4>
+<hr>
+<p>Due to my deficient knowledge of Unicode, I couldn't to get the formatting right using various Python functions. Finally, after an hour of trying, I lost my patience and turned to Rube Goldberg-ing it with <code>sed</code>. This hack will get all the key-value pairs inside one single file called <code>emojis.json</code>  -</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> filename in /home/varad/json/string/*.json<span class="p">;</span> <span class="k">do</span>  <span class="c1"># loop through all the json files containing emojis</span>
+    sed -i <span class="s1">&#39;:a /\[/!{N;ba}; s/.*\[//g&#39;</span> <span class="nv">$filename</span><span class="p">;</span>   <span class="c1"># join all lines until the &#39;[&#39; character</span>
+    sed -i <span class="s1">&#39;s/\]/,/g&#39;</span> <span class="nv">$filename</span><span class="p">;</span>                    <span class="c1"># replace the &#39;]&#39; character and with a &#39;,&#39; to enable extension of the list</span>
+    head -n -2 <span class="nv">$filename</span> &gt;&gt; emojis.json<span class="p">;</span>            <span class="c1"># remove the last 2 lines of the file to enable extension of the list</span>
+<span class="k">done</span>
+
+sed -i <span class="s1">&#39;1s/^/\[ /&#39;</span> emojis.json                      <span class="c1"># Add a &#39;[&#39; to the top of the file to denote the start of a list</span>
+sed -i <span class="s1">&#39;$ d&#39;</span> emojis.json                            <span class="c1"># Remove the last &#39;,&#39;</span>
+sed -i -e <span class="s2">&quot;\$a]&quot;</span> emojis.json                        <span class="c1"># Add a &#39;]&#39; to the end of the file to denote the end of a list</span>
+</pre></div>
+
+
+<p>The file <code>emojis.json</code> now has an extensive list of emoji that we can use.
+<br/><br/></p>
+<h4>Completing the setup</h4>
+<hr>
+<p>We now have everything we need to start working with bytefish's emoji extension. Go back to <code>dev</code>, and into the <code>pelican</code> folder therein to make the <a href="">required edits</a> to <code>settings.py</code>. Here's where a misstep might occur - depending on how you configured it, the path to the emoji extension <code>.egg</code> file might not be part of your <code>PYTHONPATH</code>. To ensure that happens, add the following to <code>settings.py</code>, before the import statement for the emoji extension.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/home/varad/envs/website/lib/python2.7/site-packages/emojiextension-1.1-py2.7.egg&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Of course, you should replace that path with wherever your extension got installed (you would have gotten that location's path after the setup script completed). If you've been following along this post, you only need to replace <code>varad</code> with your username. </p>
+<p>Another possible misstep is not having <code>emojis.json</code> in the right location. So, inside <code>dev/pelican</code>, make a folder called <code>resources</code> and copy the previously generated <code>emojis.json</code> to this folder.</p>
+<p>Once done, simply run <code>python setup.py install</code> from the <code>dev</code> folder again to re-build Pelican and you will now have emoji support!
+<br/><br/></p>
+<h3>Publishing with Github Pages</h3>
+<hr>
+<p>This is by far the most trivial step in the entire process. Since the live blog is only concerned with the final HTML output, I copy the contents of the output folder into the as yet unused <code>prod</code> folder we created in the beginning and simply push that to the <code>master</code> branch of my Github Pages (<code>varadgunjal.github.io</code>) repository. And that's it! The changes should be live almost immediately thereafter! &nbsp; 🤘</p>
+<p>Questions? Corrections? Let me know in the comments section below.</p>
+      </div>
+<!-- /.entry-content -->
+      <footer class="post-info text-muted">
+        <button type="button" class="btn btn-default">          
+          <a href="https://blog.varadgunjal.com/category/misc.html"><div class="fa fa-lg fa-folder-open"></div> misc</a>
+        </button>
+        <button type="button" class="btn btn-default">
+          <a href="https://blog.varadgunjal.com/tag/python.html"><div class="fa fa-lg fa-tag"></div> Python</a>
+        </button>
+        <button type="button" class="btn btn-default">
+          <a href="https://blog.varadgunjal.com/tag/pelican.html"><div class="fa fa-lg fa-tag"></div> Pelican</a>
+        </button>
+        <button type="button" class="btn btn-default">
+          <a href="https://blog.varadgunjal.com/tag/emoji.html"><div class="fa fa-lg fa-tag"></div> Emoji</a>
+        </button>
+      </footer>
+      <!-- /.post-info -->
+    </section>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p class="footer-text">&copy; <a href="https://blog.varadgunjal.com">blag</a> powered by <a href="http://getpelican.com/">pelican</a> with <a href="https://github.com/avinassh/skyfall">skyfall</a> theme.</p>
+      </div>
+    </footer>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
