@@ -15,7 +15,7 @@
     <!-- for Facebook -->          
     <meta property="og:title" content="Blogging with Pelican & Github Pages" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://blog.varadgunjal.com/blog-pelican-gh-pages-emoji.html" />
+    <meta property="og:url" content="/blog-pelican-gh-pages-emoji.html" />
  <meta property="og:description" content="<p>A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.</p>" /> 
     <!-- for Twitter -->
     <meta name="twitter:title" content="Blogging with Pelican & Github Pages" />
@@ -25,7 +25,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
     <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet" />-->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="https://blog.varadgunjal.com/theme/style.css" rel="stylesheet" />
+    <link href="/theme/style.css" rel="stylesheet" />
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -48,15 +48,15 @@
           <a class="navbar-left" style="padding-top: 5px; padding-bottom: 5px">
             <img style="border-radius: 50%; height: 40px" src="me.png" />
           </a>
-          <a class="navbar-brand" style="margin-left: 5px" href="https://blog.varadgunjal.com">blag</a>
+          <a class="navbar-brand" style="margin-left: 5px" href="">blag</a>
         </div>
         <div class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
-            <li ><a href="https://blog.varadgunjal.com/archives.html">archives</a></li>
-            <li ><a href="https://blog.varadgunjal.com/tags.html">about</a></li>           
+            <li ><a href="/archives.html">archives</a></li>
+            <li ><a href="/tags.html">about</a></li>           
             <!--
 f
-            <li><a href="https://blog.varadgunjal.com/tags.html">tags</a></li>
+            <li><a href="/tags.html">tags</a></li>
             -->
           </ul>
         </div>
@@ -70,7 +70,7 @@ f
           Blogging with Pelican & Github Pages
         </h2>
         
-        <div class="text-muted">Wed 23 June 2010</div>
+        <div class="text-muted">Sat 23 June 2018</div>
       </header>
 <!-- .entry-content -->
       <div class="entry-content">
@@ -129,7 +129,7 @@ pelican-themes -i pelican/themes/skyfall
 </pre></div>
 
 
-<p>Upon rebuilding, the site will reflect the change and you cna continue working further.
+<p>Upon rebuilding, the site will reflect the change and you can continue working further.
 <br/><br/></p>
 </blockquote>
 <h3>Adding Emoji Support</h3>
@@ -209,7 +209,7 @@ cd MarkdownEmojiExtension &amp;&amp; python setup.py install
 <br/><br/></p>
 <h4>Rolling a single emojis.json</h4>
 <hr>
-<p>Due to my deficient knowledge of Unicode, I couldn't to get the formatting right using various Python functions. Finally, after an hour of trying, I lost my patience and turned to Rube Goldberg-ing it with <code>sed</code>. This hack will get all the key-value pairs inside one single file called <code>emojis.json</code>  -</p>
+<p>Due to my deficient knowledge of Unicode, I couldn't get the formatting right using various Python functions. Finally, after an hour of trying, I lost my patience and turned to Rube Goldberg-ing it with <code>sed</code>. This hack will get all the key-value pairs inside one single file called <code>emojis.json</code>  -</p>
 <div class="highlight"><pre><span></span><span class="k">for</span> filename in /home/varad/json/string/*.json<span class="p">;</span> <span class="k">do</span>  <span class="c1"># loop through all the json files containing emojis</span>
     sed -i <span class="s1">&#39;:a /\[/!{N;ba}; s/.*\[//g&#39;</span> <span class="nv">$filename</span><span class="p">;</span>   <span class="c1"># join all lines until the &#39;[&#39; character</span>
     sed -i <span class="s1">&#39;s/\]/,/g&#39;</span> <span class="nv">$filename</span><span class="p">;</span>                    <span class="c1"># replace the &#39;]&#39; character and with a &#39;,&#39; to enable extension of the list</span>
@@ -244,16 +244,16 @@ sed -i -e <span class="s2">&quot;\$a]&quot;</span> emojis.json                  
 <!-- /.entry-content -->
       <footer class="post-info text-muted">
         <button type="button" class="btn btn-default">          
-          <a href="https://blog.varadgunjal.com/category/misc.html"><div class="fa fa-lg fa-folder-open"></div> misc</a>
+          <a href="/category/misc.html"><div class="fa fa-lg fa-folder-open"></div> misc</a>
         </button>
         <button type="button" class="btn btn-default">
-          <a href="https://blog.varadgunjal.com/tag/python.html"><div class="fa fa-lg fa-tag"></div> Python</a>
+          <a href="/tag/python.html"><div class="fa fa-lg fa-tag"></div> Python</a>
         </button>
         <button type="button" class="btn btn-default">
-          <a href="https://blog.varadgunjal.com/tag/pelican.html"><div class="fa fa-lg fa-tag"></div> Pelican</a>
+          <a href="/tag/pelican.html"><div class="fa fa-lg fa-tag"></div> Pelican</a>
         </button>
         <button type="button" class="btn btn-default">
-          <a href="https://blog.varadgunjal.com/tag/emoji.html"><div class="fa fa-lg fa-tag"></div> Emoji</a>
+          <a href="/tag/emoji.html"><div class="fa fa-lg fa-tag"></div> Emoji</a>
         </button>
       </footer>
       <!-- /.post-info -->
@@ -261,7 +261,7 @@ sed -i -e <span class="s2">&quot;\$a]&quot;</span> emojis.json                  
     </div>
     <footer class="footer">
       <div class="container">
-        <p class="footer-text">&copy; <a href="https://blog.varadgunjal.com">blag</a> powered by <a href="http://getpelican.com/">pelican</a> with <a href="https://github.com/avinassh/skyfall">skyfall</a> theme.</p>
+        <p class="footer-text">&copy; <a href="">blag</a> powered by <a href="http://getpelican.com/">pelican</a> with <a href="https://github.com/avinassh/skyfall">skyfall</a> theme.</p>
       </div>
     </footer>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
