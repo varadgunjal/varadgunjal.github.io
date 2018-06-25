@@ -89,6 +89,7 @@ source ~/envs/website/bin/activate
 </pre></div>
 
 
+<p><br></p>
 <blockquote>
 <p><strong>Tip</strong>: It can get annoying to remember the path to the folder where you store your virtual environments and type <code>source bin/activate</code> to switch into one. To get around the following, add the following to <code>~/.bash_aliases</code> -</p>
 <div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">workon() {</span>  
@@ -106,7 +107,8 @@ pelican-quickstart
 </pre></div>
 
 
-<p><code>pelican-quickstart</code> sets up a base installation by posing you a bunch of questions. This should create a some new folders under <code>dev</code> including <code>output</code>, which contains the final static HTML of the website. To view the output locally, my preferred way was to have 2 separate tmux sessions. One running the content regeneration on autoreload -</p>
+<p><br>
+<code>pelican-quickstart</code> sets up a base installation by posing you a bunch of questions. This should create a some new folders under <code>dev</code> including <code>output</code>, which contains the final static HTML of the website. To view the output locally, my preferred way was to have 2 separate tmux sessions. One running the content regeneration on autoreload -</p>
 <div class="highlight"><pre><span></span>pelican content/ -r -s pelican/settings.py
 </pre></div>
 
@@ -116,7 +118,8 @@ pelican-quickstart
 </pre></div>
 
 
-<p>For some reason, my experience with the <code>make devserver</code> command was not ideal. You can now view how your blog looks on <code>localhost:8000</code> and preview changes before publishing it live on your website.</p>
+<p>For some reason, my experience with the <code>make devserver</code> command was not ideal. You can now view how your blog looks on <code>localhost:8000</code> and preview changes before publishing it live on your website.
+<br/></p>
 <blockquote>
 <p><strong>Tip</strong>: The <code>pelican-themes</code> tool makes it super-easy to install and switch between themes. This blog uses the <a href="">skyfall</a> theme (with a few additions of my own), because it is the closest I found to some clean Hugo themes I'm fond of. To install a theme like skyfall, simply run the following under the <code>dev</code> folder -</p>
 <div class="highlight"><pre><span></span>git clone https://github.com/avinassh/skyfall.git pelican/themes/skyfall
