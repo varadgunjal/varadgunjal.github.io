@@ -75,7 +75,7 @@ f
 <!-- .entry-content -->
       <div class="entry-content">
         <p><br/>
-This post documents my (mis)adventures setting up a blog using <a href="">Pelican</a> - a static site generator, very much like the popular Jekyll &amp; Go frameworks, except it is powered by Python, not Ruby or Go. I decided to make the switch despite years of stability with Jekyll, because Python.</p>
+This post documents my (mis)adventures setting up a blog using <a href="https://blog.getpelican.com/">Pelican</a> - a static site generator, very much like the popular Jekyll &amp; Go frameworks, except it is powered by Python, not Ruby or Go. I decided to make the switch despite years of stability with Jekyll, because Python.</p>
 <h3>Installing Pelican</h3>
 <hr>
 <p>I wanted to have the ability to add some customizations of my own, so I decided to install Pelican from source. I created 2 separate folders: <code>dev</code> to contain local experimentation and <code>prod</code> to publish finalized edits to my Github Pages repository. The local setup is only concerned with <code>dev</code>. Run the following command inside an (preferably empty) directory on your machine where you want to store your website contents.</p>
@@ -83,7 +83,7 @@ This post documents my (mis)adventures setting up a blog using <a href="">Pelica
 </pre></div>
 
 
-<p>As mentioned in the <a href="">documentation</a>, create a virtual environment first using <code>virtualenv</code> before proceeding with any further installation. I called mine <code>website</code>. Start it up like so -</p>
+<p>As mentioned in the <a href="http://docs.getpelican.com/en/stable/install.html#installing-pelican">documentation</a>, create a virtual environment first using <code>virtualenv</code> before proceeding with any further installation. I called mine <code>website</code>. Start it up like so -</p>
 <div class="highlight"><pre><span></span>virtualenv ~/envs/website
 source ~/envs/website/bin/activate
 </pre></div>
@@ -121,7 +121,7 @@ pelican-quickstart
 <p>For some reason, my experience with the <code>make devserver</code> command was not ideal. You can now view how your blog looks on <code>localhost:8000</code> and preview changes before publishing it live on your website.
 <br/></p>
 <blockquote>
-<p><strong>Tip</strong>: The <code>pelican-themes</code> tool makes it super-easy to install and switch between themes. This blog uses the <a href="">skyfall</a> theme (with a few additions of my own), because it is the closest I found to some clean Hugo themes I'm fond of. To install a theme like skyfall, simply run the following under the <code>dev</code> folder -</p>
+<p><strong>Tip</strong>: The <code>pelican-themes</code> tool makes it super-easy to install and switch between themes. This blog uses the <a href="https://github.com/avinassh/skyfall">skyfall</a> theme (with a few additions of my own), because it is the closest I found to some clean Hugo themes I'm fond of. To install a theme like skyfall, simply run the following under the <code>dev</code> folder -</p>
 <div class="highlight"><pre><span></span>git clone https://github.com/avinassh/skyfall.git pelican/themes/skyfall
 pelican-themes -i pelican/themes/skyfall
 </pre></div>
@@ -137,7 +137,7 @@ pelican-themes -i pelican/themes/skyfall
 </blockquote>
 <h3>Adding Emoji Support</h3>
 <hr>
-<p>Sadly, Pelican doesn't support have in-built support for emoji like Jekyll does. Not like I really care about emoji, but I <em><strong>really</strong></em> wanted to add in a <code>grinning_face</code> emoji at the end of my first blog post. Don't judge. I didn't find anything under the <a href="">Pelican Plugins</a>, but, serendipitously, one of my programmer heroes, <a href="">bytefish</a>, had published a <a href="">solution</a> to this just 2 weeks ago. His post detailing it is pretty self-explanatory, however, I'll fill in some blanks, if you make the same missteps I did.</p>
+<p>Sadly, Pelican doesn't support have in-built support for emoji like Jekyll does. Not like I really care about emoji, but I <em><strong>really</strong></em> wanted to add in a <code>grinning_face</code> emoji at the end of my first blog post. Don't judge. I didn't find anything under the <a href="https://github.com/getpelican/pelican-plugins">Pelican Plugins</a>, but, serendipitously, one of my programmer heroes, <a href="https://bytefish.de/">bytefish</a>, had published a <a href="https://bytefish.de/blog/markdown_emoji_extension/">solution</a> to this just 2 weeks ago. His post detailing it is pretty self-explanatory, however, I'll fill in some blanks, if you make the same missteps I did.</p>
 <p>To get started, fetch the source code for the extension and install it on your machine. If you care a lot about separation of concerns, make sure you switch over to the <code>website</code> virtual environment, before executing the following commands in a folder where you want to store software -</p>
 <div class="highlight"><pre><span></span>git clone https://github.com/bytefish/MarkdownEmojiExtension
 cd MarkdownEmojiExtension &amp;&amp; python setup.py install
@@ -149,7 +149,7 @@ cd MarkdownEmojiExtension &amp;&amp; python setup.py install
 <li>
 <p>To parse emoji in your posts correctly, you need to wrap them in 2 colon groups when you're writing, and not 1 like you may be used to viz. 😀 instead of :grinning_face:</p>
 <ul>
-<li>This shouldn't be too much of a problem unless you <a href="">communicate exclusively in emoji</a>. And if you do, just change the regex inside <code>emojiextension.py</code>.</li>
+<li>This shouldn't be too much of a problem unless you <a href="http://www.businessinsider.com/couple-only-communicates-with-emoji-2014-8?IR=T">communicate exclusively in emoji</a>. And if you do, just change the regex inside <code>emojiextension.py</code>.</li>
 </ul>
 </li>
 <li>
@@ -229,7 +229,7 @@ sed -i -e <span class="s2">&quot;\$a]&quot;</span> emojis.json                  
 <br/><br/></p>
 <h4>Completing the setup</h4>
 <hr>
-<p>We now have everything we need to start working with bytefish's emoji extension. Go back to <code>dev</code>, and into the <code>pelican</code> folder therein to make the <a href="">required edits</a> to <code>settings.py</code>. Here's where a misstep might occur - depending on how you configured it, the path to the emoji extension <code>.egg</code> file might not be part of your <code>PYTHONPATH</code>. To ensure that happens, add the following to <code>settings.py</code>, before the import statement for the emoji extension.</p>
+<p>We now have everything we need to start working with bytefish's emoji extension. Go back to <code>dev</code>, and into the <code>pelican</code> folder therein to make the <a href="https://bytefish.de/blog/markdown_emoji_extension/#integrating-it-into-pelican">required edits</a> to <code>settings.py</code>. Here's where a misstep might occur - depending on how you configured it, the path to the emoji extension <code>.egg</code> file might not be part of your <code>PYTHONPATH</code>. To ensure that happens, add the following to <code>settings.py</code>, before the import statement for the emoji extension.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/home/varad/envs/website/lib/python2.7/site-packages/emojiextension-1.1-py2.7.egg&quot;</span><span class="p">)</span>
 </pre></div>
