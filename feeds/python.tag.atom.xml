@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>blag - Python</title><link href="http;//blog.varadgunjal.com/" rel="alternate"></link><link href="http;//blog.varadgunjal.com/feeds/python.tag.atom.xml" rel="self"></link><id>http;//blog.varadgunjal.com/</id><updated>2018-06-23T19:30:00+02:00</updated><entry><title>Blogging with Pelican &amp; Github Pages</title><link href="http;//blog.varadgunjal.com/blog-pelican-gh-pages-emoji.html" rel="alternate"></link><published>2018-06-23T10:20:00+02:00</published><updated>2018-06-23T19:30:00+02:00</updated><author><name>Varad Gunjal</name></author><id>tag:None,2018-06-23:http;//blog.varadgunjal.com/blog-pelican-gh-pages-emoji.html</id><summary type="html">&lt;p&gt;A walkthrough of how to setup a blog with Pelican and deploy it on Github Pages, with a side of Emoji Support.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;br/&gt;
+This post documents my (mis)adventures setting up a blog using &lt;a href="https://blog.getpelican.com/"&gt;Pelican&lt;/a&gt; - a static site generator, very much like the popular Jekyll &amp;amp; Go frameworks, except it is powered by Python, not Ruby or Go. I decided to make the switch despite years of stability with Jekyll, because Python.&lt;/p&gt;
+&lt;h3&gt;Installing Pelican&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;I wanted to have the ability to add some customizations of my own, so I decided to install Pelican from source. I created 2 separate folders: &lt;code&gt;dev&lt;/code&gt; to contain local experimentation and &lt;code&gt;prod&lt;/code&gt; to publish finalized edits to my Github Pages repository. The local setup is only concerned with &lt;code&gt;dev&lt;/code&gt;. Run the following command inside an (preferably empty) directory on your machine where you want to store your website contents.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/getpelican/pelican.git dev
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As mentioned in the &lt;a href="http://docs.getpelican.com/en/stable/install.html#installing-pelican"&gt;documentation&lt;/a&gt;, create a virtual environment first using &lt;code&gt;virtualenv&lt;/code&gt; before proceeding with any further installation. I called mine &lt;code&gt;website&lt;/code&gt;. Start it up like so -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;virtualenv ~/envs/website
+source ~/envs/website/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Tip&lt;/strong&gt;: It can get annoying to remember the path to the folder where you store your virtual environments and type &lt;code&gt;source bin/activate&lt;/code&gt; to switch into one. To get around the following, add the following to &lt;code&gt;~/.bash_aliases&lt;/code&gt; -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;workon() {&lt;/span&gt;  
+    &lt;span class="nx"&gt;source&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="sr"&gt;/envs/&lt;/span&gt;&lt;span class="nx"&gt;$1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;activate&lt;/span&gt;  
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and you can now switch into a virtual environment by simply typing &lt;code&gt;workon &amp;lt;env name&amp;gt;&lt;/code&gt; at the command line from anywhere in your filesystem.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now navigate to the &lt;code&gt;dev&lt;/code&gt; folder which contains the pelican source code pulled from Github in the first step and run the setup scripts.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;cd dev
+python setup.py install
+pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;br&gt;
+&lt;code&gt;pelican-quickstart&lt;/code&gt; sets up a base installation by posing you a bunch of questions. This should create a some new folders under &lt;code&gt;dev&lt;/code&gt; including &lt;code&gt;output&lt;/code&gt;, which contains the final static HTML of the website. To view the output locally, my preferred way was to have 2 separate tmux sessions. One running the content regeneration on autoreload -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican content/ -r -s pelican/settings.py
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and another, building the HTML and serving it up on &lt;code&gt;localhost&lt;/code&gt; -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;make html &amp;amp;&amp;amp; cd output &amp;amp;&amp;amp; python -m SimpleHTTPServer
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For some reason, my experience with the &lt;code&gt;make devserver&lt;/code&gt; command was not ideal. You can now view how your blog looks on &lt;code&gt;localhost:8000&lt;/code&gt; and preview changes before publishing it live on your website.
+&lt;br/&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Tip&lt;/strong&gt;: The &lt;code&gt;pelican-themes&lt;/code&gt; tool makes it super-easy to install and switch between themes. This blog uses the &lt;a href="https://github.com/avinassh/skyfall"&gt;skyfall&lt;/a&gt; theme (with a few additions of my own), because it is the closest I found to some clean Hugo themes I'm fond of. To install a theme like skyfall, simply run the following under the &lt;code&gt;dev&lt;/code&gt; folder -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/avinassh/skyfall.git pelican/themes/skyfall
+pelican-themes -i pelican/themes/skyfall
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and add a rule to &lt;code&gt;pelicanconf.py&lt;/code&gt; -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;THEMES = u&amp;#39;pelican/themes/skyfall&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Upon rebuilding, the site will reflect the change and you can continue working further.
+&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3&gt;Adding Emoji Support&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;Sadly, Pelican doesn't support have in-built support for emoji like Jekyll does. Not like I really care about emoji, but I &lt;em&gt;&lt;strong&gt;really&lt;/strong&gt;&lt;/em&gt; wanted to add in a &lt;code&gt;grinning_face&lt;/code&gt; emoji at the end of my first blog post. Don't judge. I didn't find anything under the &lt;a href="https://github.com/getpelican/pelican-plugins"&gt;Pelican Plugins&lt;/a&gt;, but, serendipitously, one of my programmer heroes, &lt;a href="https://bytefish.de/"&gt;bytefish&lt;/a&gt;, had published a &lt;a href="https://bytefish.de/blog/markdown_emoji_extension/"&gt;solution&lt;/a&gt; to this just 2 weeks ago. His post detailing it is pretty self-explanatory, however, I'll fill in some blanks, if you make the same missteps I did.&lt;/p&gt;
+&lt;p&gt;To get started, fetch the source code for the extension and install it on your machine. If you care a lot about separation of concerns, make sure you switch over to the &lt;code&gt;website&lt;/code&gt; virtual environment, before executing the following commands in a folder where you want to store software -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;git clone https://github.com/bytefish/MarkdownEmojiExtension
+cd MarkdownEmojiExtension &amp;amp;&amp;amp; python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will install the emoji extension within the &lt;code&gt;website&lt;/code&gt; virtual environment. However, before we are able to use it further, note some quirks of it -&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;To parse emoji in your posts correctly, you need to wrap them in 2 colon groups when you're writing, and not 1 like you may be used to viz. 😀 instead of :grinning_face:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This shouldn't be too much of a problem unless you &lt;a href="http://www.businessinsider.com/couple-only-communicates-with-emoji-2014-8?IR=T"&gt;communicate exclusively in emoji&lt;/a&gt;. And if you do, just change the regex inside &lt;code&gt;emojiextension.py&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The extension assumes that you have the mapping between emoji identifiers and their corresponding unicode stored as a list in a file called &lt;code&gt;emojis.json&lt;/code&gt; under a &lt;code&gt;resources&lt;/code&gt; folder at the root of your perlican installation - which, in our case, corresponds to the &lt;code&gt;dev&lt;/code&gt; folder. So your &lt;code&gt;dev&lt;/code&gt; folder would look like -&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;dev  
+|  
++-- pelican/  
+|  
++-- requirements/  
+|  
+...  
+...  
+|  
++-- resources/  
+   |  
+   +-- emojis.json
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h4&gt;Emoji Dictionary&lt;/h4&gt;
+&lt;hr&gt;
+&lt;p&gt;As mentioned in the original blog post for the emoji extension, a good reference for emojis can be found here - https://github.com/shanraisshan/EmojiCodeSheet. The data we need to get is under the &lt;code&gt;json/string&lt;/code&gt; folder. I wasn't about to download an entire repo of data I'd most likely never use. So instead, I used the handy &lt;a href="https://chrome.google.com/webstore/detail/gitzip-for-github/ffabmkklhbepgcgfonabamgnfafbdlkn"&gt;GitZip extension&lt;/a&gt; to download that specific folder as a zip file. Extracting the contents of the zip folder will keep all the files under &lt;code&gt;json/string&lt;/code&gt; in the directory where you downloaded it. An interesting fact about the structure of these files - all the key-value pairs are under 2 layers of nesting. For eg.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Nature.json&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;  
+    &lt;span class="nt"&gt;&amp;quot;natures&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  
+        &lt;span class="s2"&gt;&amp;quot;nature&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;  
+            &lt;span class="p"&gt;{&lt;/span&gt;  
+                &lt;span class="nt"&gt;&amp;quot;key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="err"&gt;...&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;  
+                &lt;span class="nt"&gt;&amp;quot;value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="err"&gt;...&lt;/span&gt;  
+            &lt;span class="p"&gt;}&lt;/span&gt;  
+            &lt;span class="err"&gt;.&lt;/span&gt;  
+            &lt;span class="err"&gt;.&lt;/span&gt;  
+            &lt;span class="err"&gt;.&lt;/span&gt;  
+        &lt;span class="p"&gt;]&lt;/span&gt;  
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;People.json&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;    
+    &lt;span class="nt"&gt;&amp;quot;peoples&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;people&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;quot;key&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="err"&gt;...&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="nt"&gt;&amp;quot;value&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="err"&gt;...&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="err"&gt;.&lt;/span&gt;
+            &lt;span class="err"&gt;.&lt;/span&gt;
+            &lt;span class="err"&gt;.&lt;/span&gt;
+        &lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Thus, accessing the key-value pairs can follow a common structure for all files. This common structure makes it straightforward for us to compose them all into one file. 
+&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h4&gt;Rolling a single emojis.json&lt;/h4&gt;
+&lt;hr&gt;
+&lt;p&gt;Due to my deficient knowledge of Unicode, I couldn't get the formatting right using various Python functions. Finally, after an hour of trying, I lost my patience and turned to Rube Goldberg-ing it with &lt;code&gt;sed&lt;/code&gt;. This hack will get all the key-value pairs inside one single file called &lt;code&gt;emojis.json&lt;/code&gt;  -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; filename in /home/varad/json/string/*.json&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;  &lt;span class="c1"&gt;# loop through all the json files containing emojis&lt;/span&gt;
+    sed -i &lt;span class="s1"&gt;&amp;#39;:a /\[/!{N;ba}; s/.*\[//g&amp;#39;&lt;/span&gt; &lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;# join all lines until the &amp;#39;[&amp;#39; character&lt;/span&gt;
+    sed -i &lt;span class="s1"&gt;&amp;#39;s/\]/,/g&amp;#39;&lt;/span&gt; &lt;span class="nv"&gt;$filename&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;                    &lt;span class="c1"&gt;# replace the &amp;#39;]&amp;#39; character and with a &amp;#39;,&amp;#39; to enable extension of the list&lt;/span&gt;
+    head -n -2 &lt;span class="nv"&gt;$filename&lt;/span&gt; &amp;gt;&amp;gt; emojis.json&lt;span class="p"&gt;;&lt;/span&gt;            &lt;span class="c1"&gt;# remove the last 2 lines of the file to enable extension of the list&lt;/span&gt;
+&lt;span class="k"&gt;done&lt;/span&gt;
+
+sed -i &lt;span class="s1"&gt;&amp;#39;1s/^/\[ /&amp;#39;&lt;/span&gt; emojis.json                      &lt;span class="c1"&gt;# Add a &amp;#39;[&amp;#39; to the top of the file to denote the start of a list&lt;/span&gt;
+sed -i &lt;span class="s1"&gt;&amp;#39;$ d&amp;#39;&lt;/span&gt; emojis.json                            &lt;span class="c1"&gt;# Remove the last &amp;#39;,&amp;#39;&lt;/span&gt;
+sed -i -e &lt;span class="s2"&gt;&amp;quot;\$a]&amp;quot;&lt;/span&gt; emojis.json                        &lt;span class="c1"&gt;# Add a &amp;#39;]&amp;#39; to the end of the file to denote the end of a list&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The file &lt;code&gt;emojis.json&lt;/code&gt; now has an extensive list of emoji that we can use.
+&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h4&gt;Completing the setup&lt;/h4&gt;
+&lt;hr&gt;
+&lt;p&gt;We now have everything we need to start working with bytefish's emoji extension. Go back to &lt;code&gt;dev&lt;/code&gt;, and into the &lt;code&gt;pelican&lt;/code&gt; folder therein to make the &lt;a href="https://bytefish.de/blog/markdown_emoji_extension/#integrating-it-into-pelican"&gt;required edits&lt;/a&gt; to &lt;code&gt;settings.py&lt;/code&gt;. Here's where a misstep might occur - depending on how you configured it, the path to the emoji extension &lt;code&gt;.egg&lt;/code&gt; file might not be part of your &lt;code&gt;PYTHONPATH&lt;/code&gt;. To ensure that happens, add the following to &lt;code&gt;settings.py&lt;/code&gt;, before the import statement for the emoji extension.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/home/varad/envs/website/lib/python2.7/site-packages/emojiextension-1.1-py2.7.egg&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Of course, you should replace that path with wherever your extension got installed (you would have gotten that location's path after the setup script completed). If you've been following along this post, you only need to replace &lt;code&gt;varad&lt;/code&gt; with your username. &lt;/p&gt;
+&lt;p&gt;Another possible misstep is not having &lt;code&gt;emojis.json&lt;/code&gt; in the right location. So, inside &lt;code&gt;dev/pelican&lt;/code&gt;, make a folder called &lt;code&gt;resources&lt;/code&gt; and copy the previously generated &lt;code&gt;emojis.json&lt;/code&gt; to this folder.&lt;/p&gt;
+&lt;p&gt;Once done, simply run &lt;code&gt;python setup.py install&lt;/code&gt; from the &lt;code&gt;dev&lt;/code&gt; folder again to re-build Pelican and you will now have emoji support!
+&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h3&gt;Publishing with Github Pages&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;This is by far the most trivial step in the entire process. Since the live blog is only concerned with the final HTML output, I copy the contents of the output folder into the as yet unused &lt;code&gt;prod&lt;/code&gt; folder we created in the beginning and simply push that to the &lt;code&gt;master&lt;/code&gt; branch of my Github Pages (&lt;code&gt;varadgunjal.github.io&lt;/code&gt;) repository. And that's it! The changes should be live almost immediately thereafter! &amp;nbsp; 🤘&lt;/p&gt;
+&lt;p&gt;Questions? Corrections? Let me know in the comments section below.&lt;/p&gt;</content><category term="Python"></category><category term="Pelican"></category><category term="Emoji"></category></entry></feed>

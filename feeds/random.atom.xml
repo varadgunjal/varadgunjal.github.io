@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>blag - Random</title><link href="/" rel="alternate"></link><link href="/feeds/random.atom.xml" rel="self"></link><id>/</id><updated>2015-08-04T16:30:00+02:00</updated><entry><title>Understanding equity dilution</title><link href="/startup-valuations.html" rel="alternate"></link><published>2015-08-03T08:20:00+02:00</published><updated>2015-08-04T16:30:00+02:00</updated><author><name>Varad Gunjal</name></author><id>tag:None,2015-08-03:/startup-valuations.html</id><summary type="html">&lt;p&gt;.&lt;/p&gt;</summary><content type="html">&lt;p&gt;As part of my current effort to build a company from scratch, I’m currently getting an education on what it means to build a business in the tech industry. This post is meant to encapsulate a small portion of those learnings by walking you through the process of equity dilution.&lt;/p&gt;
+&lt;h3&gt;What is equity?&lt;/h3&gt;
+&lt;h3&gt;What does dilution mean?&lt;/h3&gt;
+&lt;h3&gt;Pre &amp;amp; Post Money Valuations&lt;/h3&gt;</content></entry><entry><title>System program problem detected</title><link href="/ubuntu-crash.html" rel="alternate"></link><published>2010-06-25T13:20:00+02:00</published><updated>2015-02-05T15:30:00+01:00</updated><author><name>Varad Gunjal</name></author><id>tag:None,2010-06-25:/ubuntu-crash.html</id><summary type="html">&lt;p&gt;Pesky crash prompts in Ubuntu and how to get rid of them.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Ever since getting my first laptop a few months ago, I've been trying to learn more about computers. Taking some advice from friends who entered the game earlier than I have, I decided to throw myself in at the deep end and learn to live on Linux.&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;For the past few months, Ubuntu has been my default distro for work machines and I try to fiddle around and break things, something I'm astonishingly successful at. Unfortunately, this mucking around has... consequences. The most annoying one for me, by far, has to be the process crash and error report prompts. These are not uncommon to begin with. If you’re using Ubuntu on your machine, it is very likely you’ve encountered one of these bad boys at some time or the other - &lt;br/&gt;&lt;br/&gt;
+&lt;strong&gt;EDIT&lt;/strong&gt;: Changing the image to reflect my new UI 😎 &lt;br/&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src="scr.png" style="display:block; margin: auto"&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h3&gt;Why do they show up?&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;The reason they pop up is usually due to a program crashing. And if you’ve been messing around with the system, you’ve likely made changes that lead to more undefined behavior and thus, more crashes.&lt;/p&gt;
+&lt;p&gt;Ubuntu has an error reporting system called &lt;code&gt;apport&lt;/code&gt; which tries to catch all program crashes in the background and report them to help the developers fix the OS. These crash reports are created inside &lt;code&gt;/var/crash&lt;/code&gt;, from where &lt;code&gt;apport&lt;/code&gt; reads them. They remain stuck there because the OS has no implemented way to remove them automatically. And since apport is run on boot, this annoying alert is the first thing you’ll see thereafter when you log in.&lt;br/&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;h3&gt;Make it go away !&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;So, how to make it go away? The gentler way to rid yourself of them would be to manually remove the old crash reports inside /var/crash. Open a terminal and type -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;~$ sudo rm /var/crash/*
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After a reboot the popups are gone. If you don't want to reboot, you can close all open popups with -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;~$ killall system-crash-notification
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Want to make a permanent solution to take care of all future crash prompts? Just make sure you run &lt;code&gt;sudo rm /var/crash/*&lt;/code&gt; on shutdown / reboot / logout. Of course, not manually - setup a cron job. Exercise for the reader, and all that.
+Another (unadvisable) way of preventing future crash prompts would be to disable error reporting itself. If you like to live dangerously, edit the configuration file at &lt;code&gt;/etc/default/apport&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;~$ sudo gedit /etc/default/apport
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That file's contents should look like -&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# set this to 0 to disable apport, or to 1 to enable it&lt;/span&gt;
+&lt;span class="c1"&gt;# you can temporarily override this with&lt;/span&gt;
+&lt;span class="c1"&gt;# sudo service apport start force_start=1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Follow the instructions in the comments and that's it! No more pesky crash prompts.&lt;/p&gt;</content></entry><entry><title>Kamehameha</title><link href="/kamehameha.html" rel="alternate"></link><published>2010-06-05T10:20:00+02:00</published><updated>2010-06-05T19:30:00+02:00</updated><author><name>Varad Gunjal</name></author><id>tag:None,2010-06-05:/kamehameha.html</id><summary type="html">&lt;p&gt;I couldn't think of a good name for my first blog post, so this has to do.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here's hoping this blog doesn't go the way of countless others that die after a pithy "Hello World" post. They don't think it be like it is, but it do. 😀&lt;/p&gt;</content></entry></feed>
