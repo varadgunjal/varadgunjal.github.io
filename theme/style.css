@@ -30,6 +30,11 @@ blockquote {
   background-color: #eee;
 }
 
+.image-container {
+  display: block;
+  margin: auto;
+}
+
 .summary {
   display: inline;
 }
