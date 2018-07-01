@@ -4,23 +4,23 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
   <head>
-    <title>Kamehameha - blag</title>
+    <title>System program problem detected - blag</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- for Google -->
     <meta name="author" content="varad" />
- <meta name="description" content="<p>I couldn't think of a good name for my first blog post, so this has to do.</p>" /> 
+ <meta name="description" content="<p>Pesky crash prompts in Ubuntu and how to get rid of them.</p>" /> 
     <!-- for Facebook -->          
-    <meta property="og:title" content="Kamehameha" />
+    <meta property="og:title" content="System program problem detected" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="/kamehameha.html" />
- <meta property="og:description" content="<p>I couldn't think of a good name for my first blog post, so this has to do.</p>" /> 
+    <meta property="og:url" content="/ubuntu-crash.html" />
+ <meta property="og:description" content="<p>Pesky crash prompts in Ubuntu and how to get rid of them.</p>" /> 
     <!-- for Twitter -->
-    <meta name="twitter:title" content="Kamehameha" />
-    <meta name="twitter:description" content="<p>I couldn't think of a good name for my first blog post, so this has to do.</p>" />
-    <meta name="twitter:card" content="<p>I couldn't think of a good name for my first blog post, so this has to do.</p>" />
+    <meta name="twitter:title" content="System program problem detected" />
+    <meta name="twitter:description" content="<p>Pesky crash prompts in Ubuntu and how to get rid of them.</p>" />
+    <meta name="twitter:card" content="<p>Pesky crash prompts in Ubuntu and how to get rid of them.</p>" />
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
     <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet" />-->
@@ -68,14 +68,48 @@ f
     <section id="content" class="article content">
       <header>
         <h2 class="entry-title">
-          Kamehameha
+          System program problem detected
         </h2>
         
-        <div class="text-muted">Sat 05 June 2010</div>
+        <div class="text-muted">Fri 25 June 2010</div>
       </header>
 <!-- .entry-content -->
       <div class="entry-content">
-        <p>Here's hoping this blog doesn't go the way of countless others that die after a pithy "Hello World" post. They don't think it be like it is, but it do. 😀</p>
+        <p>Ever since getting my first laptop a few months ago, I've been trying to learn more about computers. Taking some advice from friends who entered the game earlier than I have, I decided to throw myself in at the deep end and learn to live on Linux.<br/></p>
+<p>For the past few months, Ubuntu has been my default distro for work machines and I try to fiddle around and break things, something I'm astonishingly successful at. Unfortunately, this mucking around has... consequences. The most annoying one for me, by far, has to be the process crash and error report prompts. These are not uncommon to begin with. If you’re using Ubuntu on your machine, it is very likely you’ve encountered one of these bad boys at some time or the other - <br/><br/>
+<strong>EDIT</strong>: Changing the image to reflect my new UI 😎 <br/> </p>
+<p><img src="scr.png" style="display:block; margin: auto">
+<br/><br/></p>
+<h3>Why do they show up?</h3>
+<hr>
+<p>The reason they pop up is usually due to a program crashing. And if you’ve been messing around with the system, you’ve likely made changes that lead to more undefined behavior and thus, more crashes.</p>
+<p>Ubuntu has an error reporting system called <code>apport</code> which tries to catch all program crashes in the background and report them to help the developers fix the OS. These crash reports are created inside <code>/var/crash</code>, from where <code>apport</code> reads them. They remain stuck there because the OS has no implemented way to remove them automatically. And since apport is run on boot, this annoying alert is the first thing you’ll see thereafter when you log in.<br/><br/></p>
+<h3>Make it go away !</h3>
+<hr>
+<p>So, how to make it go away? The gentler way to rid yourself of them would be to manually remove the old crash reports inside /var/crash. Open a terminal and type -</p>
+<div class="highlight"><pre><span></span>~$ sudo rm /var/crash/*
+</pre></div>
+
+
+<p>After a reboot the popups are gone. If you don't want to reboot, you can close all open popups with -</p>
+<div class="highlight"><pre><span></span>~$ killall system-crash-notification
+</pre></div>
+
+
+<p>Want to make a permanent solution to take care of all future crash prompts? Just make sure you run <code>sudo rm /var/crash/*</code> on shutdown / reboot / logout. Of course, not manually - setup a cron job. Exercise for the reader, and all that.
+Another (unadvisable) way of preventing future crash prompts would be to disable error reporting itself. If you like to live dangerously, edit the configuration file at <code>/etc/default/apport</code></p>
+<div class="highlight"><pre><span></span>~$ sudo gedit /etc/default/apport
+</pre></div>
+
+
+<p>That file's contents should look like -</p>
+<div class="highlight"><pre><span></span><span class="c1"># set this to 0 to disable apport, or to 1 to enable it</span>
+<span class="c1"># you can temporarily override this with</span>
+<span class="c1"># sudo service apport start force_start=1</span>
+</pre></div>
+
+
+<p>Follow the instructions in the comments and that's it! No more pesky crash prompts.</p>
       </div>
 <!-- /.entry-content -->
       <footer class="post-info text-muted">
