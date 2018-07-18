@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <title>Something something Dropbox - blag</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- for Google -->
+    <meta name="author" content="varad" />
+ <meta name="description" content="<p>Mimicking a subset of Dropbox functionality with <code>inotify</code> &amp; <code>rclone</code> for Fun and Profit</p>" />  <meta name="keywords" content="" /> 
+    <!-- for Facebook -->          
+    <meta property="og:title" content="Something something Dropbox" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/dropbox-inotify.html" />
+ <meta property="og:description" content="<p>Mimicking a subset of Dropbox functionality with <code>inotify</code> &amp; <code>rclone</code> for Fun and Profit</p>" /> 
+    <!-- for Twitter -->
+    <meta name="twitter:title" content="Something something Dropbox" />
+    <meta name="twitter:description" content="<p>Mimicking a subset of Dropbox functionality with <code>inotify</code> &amp; <code>rclone</code> for Fun and Profit</p>" />
+    <meta name="twitter:card" content="<p>Mimicking a subset of Dropbox functionality with <code>inotify</code> &amp; <code>rclone</code> for Fun and Profit</p>" />
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet" />-->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/theme/style.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="icon" href="v.png" />
+  </head>
+  <body id="index" class="archive">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+     <!--  -->
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-left" style="padding-top: 5px; padding-bottom: 5px">
+            <img style="border-radius: 50%; height: 40px" src="me.png" />
+          </a>
+          <a class="navbar-brand" style="margin-left: 5px" href="">blag</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right">
+          <ul class="nav navbar-nav">
+            <li ><a href="/archives.html">archives</a></li>
+            <li ><a href="/tags.html">about</a></li>           
+            <!--
+f
+            <li><a href="/tags.html">tags</a></li>
+            -->
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+    </nav>
+    <div class="container">
+    <section id="content" class="article content">
+      <header>
+        <h2 class="entry-title">
+          Something something Dropbox
+        </h2>
+        
+        <div class="text-muted">Fri 01 March 2013</div>
+      </header>
+<!-- .entry-content -->
+      <div class="entry-content">
+        <p>Something that has never made sense to me is the unicorn status of Dropbox. To be clear, I'm not being salty and hating on them - I'm sure the engineering effort that went in to creating that service involved substantial creativity. What nonplusses me is that given the competitor landscape includes Google Drive (which, for the record, has never failed me yet), why <em>on earth</em> would anyone still opt for Dropbox? I mean, Google Drive also integrates seamlessly with a bunch of Google's other products which, even as a Dropbox user, you are very likely to be using for e.g. GMail. I dunno, I guess their timing was good or I guess I'm just too locked in to the Google ecosystem to understand...</p>
+<p>This discussion spilled over last evening and ended with the inevitable "if you feel that strongly, why don't you try building it yourself?" Challenge accepted. Well, at least, part of it. I was only intrigued enough to implement 2 features of it: </p>
+<ul>
+<li>automatic backup and syncing across multiple devices and </li>
+<li>support for simultaneous editing. </li>
+</ul>
+<p>I wasn't concerned with the engineering problems of scale because a) I don't know enough to deal with those and b) it was highly unlikely that anyone except me would use what I ended up making. This post is an, albeit hacky, exploration of the automatic backup and sync problem.</p>
+<p>To break down the problem, what we need to do is detect when a file is modified and sync those changes with a backup of the file that's sitting somewhere on the interwebz. Originally, I used an AWS EC2 instance to host my file backups. But then, since Google Drive clients on Linux (at least, Ubuntu) are a joke, I decided to use Google Drive itself.
+<br/></p>
+<h3>Part 1: Detecting filetree modifications within a particular directory</h3>
+<hr>
+<p>I believed this part was to be the most challenging. Writing a script that runs in the background and periodically checks for modifications to the tree structure of a particular directory, making it resource efficient, is there a way to use interrupts instead of polling etc. But wait, doesn't Linux itself store information about file modifications? Surely, this has to be implemented in the OS itself. It is. Using <code>inotify</code> - a kernel subsystem that extends filesystems to notice changes in the same and report those changes. What's more, with support for flags like <code>IN_CREATE</code>, <code>IN_MODIFY</code>, <code>IN_OPEN</code> etc. I could get an unprecedented level of control on the triggers for my file sync. Huh, that sounds like it solves all my problems. The steps from there were fairly straightforward -
+<br/>
+First, we install <code>incrontab</code>, which is basically a <code>crontab</code> that runs on file notifications -</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install incron
+</pre></div>
+
+
+<p><code>incrontab</code> functions very much like <code>crontab</code>, including having the <code>-l</code>, <code>-e</code> flags for common operations. The next steps then are to add an entry using <code>incrontab -e</code>. However, you first need to make sure that you are among the set of users allowed to edit it. To do that edit the <code>.allow</code> file like so -</p>
+<div class="highlight"><pre><span></span>$ sudo vim /etc/incron.allow
+</pre></div>
+
+
+<p>... and add your username (in my case, this was <code>varad</code>) to the file. Once you save it, you can add a command like to track changes in your directory of choice like so -</p>
+<div class="highlight"><pre><span></span>/path/to/directory IN_MODIFY &lt;<span class="nb">command</span> to execute on detecting change&gt;
+</pre></div>
+
+
+<p>After experimenting with a bunch of flags, I concluded that <code>IN_MODIFY</code> suited this use case the best. However, there is a more comprehensive list of possible triggers detailed <a href="https://linux.die.net/man/5/incrontab">here</a>.</p>
+<p>Next, we look at the command to execute to do the remote file sync, which is the last argument that we need to provide in the command above.
+<br/><br/></p>
+<h3>Part 2: Syncing files</h3>
+<hr>
+<p>I have updated this section of the post to showcase a nifty tool - <code>rclone</code> - that I've since switched to using to do the heavy lifting for me. 
+Essentially, what we want to do in this step is patch diffs from the local file to its remote backup as efficiently as possible. Something that <code>rsync</code> was built to do. <code>rclone</code> is essentially a wrapper around <code>rsync</code> that makes life easier to transfer files. It has built-in support for a host of different services including Amazon S3, Google Drive, Dropbox etc. and does a lot of the required configuration for each of these services under the hood. This saves me a lot of time from explaining the script I wrote to recreate <code>rsync</code> functionality.</p>
+<p>To get <code>rclone</code> on your machine, just follow the instructions on the <a href="https://rclone.org/downloads/">Downloads</a> page. Once you have it on your machine, set it up to track your Google Drive account using <code>rclone config</code> as detailed <a href="https://rclone.org/googlecloudstorage/">here</a> and give it a proper identifier viz. <code>gdrive</code> instead of <code>remote</code> as suggested in the link. This ensures that we now have a function to sync files to our backup. So, the command we provide as the second argument to the <code>incrontab</code> entry above is -</p>
+<div class="highlight"><pre><span></span>rclone copy path/to/directory/you/want/to/sync gdrive:/remote/folder/path
+</pre></div>
+
+
+<p>So the <code>incrontab</code> entry will look like so -</p>
+<div class="highlight"><pre><span></span>/path/to/directory/to/changes/on IN_MODIFY rclone copy path/to/directory/you/want/to/sync gdrive:/remote/folder/path
+</pre></div>
+
+
+<p>Save the file, and that's it! <code>incron</code> will run diligently in the background doing automatic file backups forever after. And you didn't even have to make an account.
+<br/><br/></p>
+<h3>Part 3: Pulling changes from the backup</h3>
+<hr>
+<p>This completes one part of the story. We also need to account for patching diffs in <em>from</em> the backup, to give ourselves the freedom of editing wherever we please. Since I decided to procrastinate on the simultaneous editing problem (I didn't want to deal with mutexes and synchornization edge cases just yet), I just created a simple cronjob to pull the changes periodically on a conservative interval of 5 min, using the <code>rclone copy</code> as before. Inefficient, I know. Sue me.</p>
+<div class="highlight"><pre><span></span>$ crontab -e
+
+<span class="c1"># Add the following line to the file that opens up to schedule a sync every 5 min</span>
+*/5 * * * * rclone copy gdrive:/remote/folder/path path/to/local/synced/directory/
+</pre></div>
+
+
+<p><br/></p>
+<blockquote>
+<p>For a comprehensive understanding of <code>crontab</code> syntax, check out <a href="https://crontab.guru/">Crontab Guru</a></p>
+</blockquote>
+<p><br/><br/>
+And that's the first Dropbox functionality implemented! In <a href="">Part 2</a> we take on the classic problem of enabling simultaneous editing.</p>
+      </div>
+<!-- /.entry-content -->
+      <footer class="post-info text-muted">
+        <button type="button" class="btn btn-default">          
+          <a href="/category/misc.html"><div class="fa fa-lg fa-folder-open"></div> misc</a>
+        </button>
+        <button type="button" class="btn btn-default">
+          <a href="/tag/none.html"><div class="fa fa-lg fa-tag"></div> None</a>
+        </button>
+      </footer>
+      <!-- /.post-info -->
+<!-- Comment BEGIN -->
+<div id="disqus_thread" style="margin-top: 30px"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'blag';
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the
+    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+<!-- Comment END -->
+    </section>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p class="footer-text">&copy; <a href="">blag</a> powered by <a href="http://getpelican.com/">pelican</a> with <a href="https://github.com/avinassh/skyfall">skyfall</a> theme.</p>
+      </div>
+    </footer>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-117409617-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
